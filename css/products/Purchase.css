@@ -1,0 +1,130 @@
+body{
+    background-color: #fcfcfc;
+}
+
+p{
+    font-size: 40px;
+    font-family: "Inter";
+}
+
+/* 헤더 */
+
+header{
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header_option_button{
+    background-color: #00000000;
+    border: 0;
+    font-size: 40px;
+    font-family:'Times New Roman', Times, serif;
+    cursor: pointer;
+}
+
+#homepage{
+    width:300px;
+    text-align: center;
+}
+
+#header_search{
+    display: flex;
+    
+}
+#search_space{
+    flex-grow: 1;
+    height: 74px;
+    font-size: 40px;
+}
+
+#search_button{
+    width: 17%;
+    height: 80px;
+    font-size: 40px;
+}
+
+#header_option{
+    width: 300px;
+    display:flex;
+    justify-content: end;
+}
+
+/* 헤더 밑 메뉴 */
+
+nav{
+    background-color: #e9e9e9;
+    width:100%;
+    display: flex;
+
+}
+
+.nav_button{
+    display: inline-block;
+    border:0;
+    font-weight: 600;
+    width:100px;
+    height:50px;
+    background-color: #00000000;
+    font-family:'Times New Roman', Times, serif;
+    cursor: pointer;
+}
+
+.nav_button:hover{
+    background-color: #00000013;
+}
+
+main{
+    width: 1440px;
+    height: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 100px;
+}
+
+#main_header{
+    font-size :40px;
+}
+
+#main_content_summary{
+    display: flex;
+    justify-content: space-around;
+}
+
+#main_content_summary div p{
+    font-size: 20px;
+}
+
+#amount_select{
+    width: 150px;
+    height: 40px;
+}
+
+#Ordered_Info{
+    margin-left: 66px;
+    display: flex;
+    flex-direction: column;
+}
+
+.Info_category{
+    display: flex;
+    align-items: center;
+}
+
+.Info_category p{
+    font-size : 20px;
+    width: 200px;
+    height: 50px;
+    text-align: center;
+}
+
+.Info_category input{
+    font-size : 20px;
+    width: 500px;
+    height: 55px;
+}
+
+#Pay_Now_button{
+    width: 600px;
+    margin-left: 68px;
+}

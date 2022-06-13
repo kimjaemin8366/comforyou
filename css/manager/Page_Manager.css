@@ -1,0 +1,49 @@
+#nav_menu{
+    position: absolute;
+    top: 200px;
+    width: 200px;
+}
+
+#nav_filter{
+    display: flex;
+    flex-direction:row-reverse;
+}
+
+.nav_filter_criteria{
+    display: flex;
+    flex-direction: column;
+    height: 100px;
+    font-size : 30px;
+    font-weight: 700;
+}
+
+.nav_filter_name{
+    height: 100px;
+    font-size : 30px;
+    font-weight: 200;
+    cursor: pointer;
+}
+
+.nav_filter_name:hover{
+    opacity:0.6;
+}
+
+main{
+    position: absolute;
+    left: 300px;
+    top: 300px;
+    width: 1000px;
+}
+
+table{
+    width: 100%;
+    border: 1px solid black;
+}
+
+td{
+    border: 1px solid black;
+}
+
+.delete_button{
+    width: 1%;
+}

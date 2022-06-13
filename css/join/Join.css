@@ -1,0 +1,110 @@
+body{
+    margin :0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    background-color: #fcfcfc;
+    font-family:'Times New Roman', Times, serif;
+}
+
+input:disabled{
+    color: #000000;
+}
+
+main{
+    width: 56.25%;
+    height: 66.67%;
+    min-width: 400px;
+    background-color: #e9e9e9;
+}
+
+#Join_form{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+#Join_title_div{
+    width: 100%;
+    height: 12.5%;
+    border:0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#Join_title_text{
+    margin: 0;
+    height: 100%;
+    text-align: center;
+    width: 66.67%;
+    font-size: 30px;
+    background-color: #fcfcfc;
+}
+
+#Input_div{
+    height : 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    flex-grow: 1;
+}
+
+.Input_Form_withButton, .Input_Form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 15%;
+    min-height: 36px;
+}
+
+.Input_Space{
+    width: 66.67%;
+    height: 50%;
+    border:0;
+    font-size : 20px;
+    color : #9b9b9b
+}
+
+.Check_button_space{
+    width: 66.67%;
+    height: 50%;
+    text-align: end;
+}
+
+.duplicate_check_button{
+    width: 12.5%;
+    min-width: 90px;
+    height: 100%;
+    background-color: #fcfcfc;
+    font-size : 16px;
+    font-weight: 600;
+    font-family:'Times New Roman', Times, serif;
+    cursor: pointer;
+}
+
+#password_same_check{
+    margin: 0;
+}
+
+#Join_button_space{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 25%;
+}
+
+#Join_button{
+    width: 66.66%;
+    height: 50%;
+    background-color: #fcfcfc;
+    border :0;
+    font-size : 40px;
+    color: #414141;
+    font-weight: 600;
+    font-family:'Times New Roman', Times, serif;
+    cursor: pointer;
+}

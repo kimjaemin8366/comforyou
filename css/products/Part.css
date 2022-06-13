@@ -1,0 +1,68 @@
+/* 왼쪽 메뉴 */
+
+#nav_menu{
+    position: absolute;
+    top: 200px;
+    width: 200px;
+}
+
+#nav_filter{
+    display: flex;
+    flex-direction:row-reverse;
+}
+
+.nav_filter_criteria{
+    display: flex;
+    flex-direction: column;
+    height: 100px;
+    font-size : 30px;
+    font-weight: 700;
+}
+
+.nav_filter_name{
+    height: 100px;
+    font-size : 30px;
+    font-weight: 200;
+    cursor: pointer;
+}
+
+.nav_filter_name:hover{
+    opacity:0.6;
+}
+
+#nav_else{
+    display: flex;
+    flex-direction: column;
+    height: 200px;
+    justify-content: space-around;
+}
+#nav_search{
+    display: flex;
+
+}
+
+#nav_search_text{
+    width: 300px;
+    height:50px;
+}
+
+#nav_search_button{
+    width:60px;
+    height: 56px;
+}
+
+#Sort_by{
+    width:360px;
+    height: 50px;
+}
+
+#cost{
+    width: 360px;
+}
+
+/* 메인 메뉴, 상품들*/
+main{
+    position: absolute;
+    left: 300px;
+    top: 320px;
+}
