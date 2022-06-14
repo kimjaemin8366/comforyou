@@ -3,10 +3,13 @@
 <%@ page import="java.sql.DriverManager" %> 
 <%@ page import="java.sql.Connection" %>
 <%@ page import="java.sql.PreparedStatement" %> 
+<%@ page import="java.sql.Statement" %>
 <%@ page import="java.sql.ResultSet" %> 
+<%@ page import="java.util.Vector"%>
 
 <%
     String logged_id = (String) session.getAttribute("logged_id");
+    String nickname = (String) session.getAttribute("nickname");
     Boolean logged = false;
     if(logged_id != null){
         logged = true;
@@ -16,8 +19,44 @@
     String option = request.getParameter("option");
 
     if(part=="" || part==null){
-        
+        part= "CPU";
     }
+    
+    Vector<String> list = new Vector<String>();
+    int cnt = 0;
+    Class.forName("com.mysql.jdbc.Driver");
+        Connection connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/comforyou","james","8366");
+
+    if(option=="" || option==null){
+
+        String sql = "SELECT part_id, part_name, part_price, imagepath FROM component WHERE part_type=? ORDER BY post_date DESC";
+        PreparedStatement query = connect.prepareStatement(sql);
+        query.setString(1, part);
+
+        ResultSet result = query.executeQuery();
+
+        while(result.next()){
+            for(int idx=1; idx<=4; idx++){
+                list.add(result.getString(idx));
+            }
+            cnt++;
+        }
+    }else{
+        String[] filter = option.split("_");
+        String sql = "SELECT component.part_id, part_name, part_price, imagepath FROM component LEFT JOIN component_" + part.toLowerCase() + " ON component.part_id = component_" + part.toLowerCase() + ".part_id WHERE part_type='" +part+ "' AND " + filter[0] + "='" + filter[1] + "'";    
+
+        Statement stmt = connect.createStatement();
+        ResultSet result = stmt.executeQuery(sql);
+
+        while(result.next()){
+            for(int idx=1; idx<=4; idx++){
+                list.add(result.getString(idx));
+            }
+            cnt++;
+        }
+    }
+
+    
 %>
 
 
@@ -37,6 +76,8 @@
         <div id="header_option">
             <input class="header_option_button" type="button" value="Login"onclick="location.href='../login/Page_Login.jsp'">
             <input class="header_option_button" type="button" value="Join" onclick="location.href='../join/Page_Join.jsp'">
+            <p class="header_option_logged" id="header_nickname_space"></p>
+            <input class="header_option_logged" type="button" value="Logout" onclick="location.href='./login/Logout.jsp'">
         </div>
     </header>
     <nav id="header_menu">
@@ -53,25 +94,6 @@
     <nav id="nav_menu">
         <div id="nav_filter"><p>Filter</p></div>
         <hr>
-        <!-- <div class="nav_filter_list">
-            <div class="nav_filter_criteria">Manufacturer</div>
-            <div class="nav_filter_name">Intel</div>
-            <div class="nav_filter_name">AMD</div>
-        </div>
-        <hr>
-        <div class="nav_filter_list">
-            <div class="nav_filter_criteria">Core</div>
-            <div class="nav_filter_name">16+8</div>
-            <div class="nav_filter_name">8+8</div>
-            <div class="nav_filter_name">8+4</div>
-        </div>
-        <hr>
-        <div class="nav_filter_list">
-            <div class="nav_filter_criteria">DDR</div>
-            <div class="nav_filter_name">DDR5</div>
-            <div class="nav_filter_name">DDR4</div>
-            <div class="nav_filter_name">DDR3</div>
-        </div> -->
     </nav>
     <main>
         <div></div>
@@ -82,6 +104,22 @@
         
         window.onload = function(){
             show_product_list_nav();
+            if_logged();
+            product_list(); 
+        }
+
+        function if_logged(){
+            var nick = "<%=nickname%>";
+            var logged = <%=logged%>;
+            if(logged){
+                document.getElementsByClassName("header_option_logged")[0].innerHTML = nick;
+                for(var idx=0; idx<2; idx++){
+                    document.getElementsByClassName("header_option_logged")[idx].style.display = "block";
+                }
+                for(var idx=1; idx<3; idx++){
+                    document.getElementsByClassName("header_option_button")[idx].style.display = "none";
+                }
+            }
         }
 
         function show_product_list_nav(){
@@ -244,6 +282,45 @@
             for(idx=0; idx<filters.length; idx++){
                 var hr = document.createElement("hr");
                 menu.append(make_list(filters[idx], site), hr);
+            }
+        }
+
+        function product_list(){
+            var cnt = <%=cnt%>;
+
+            var list_string = "<%=list%>";
+            var list_data = list_string.substring(1, list_string.length-1).split(", ");
+            
+            for(var idx=0; idx<cnt; idx++){
+                var product_div = document.createElement("div");
+                product_div.className = "product";
+                
+                var image = document.createElement("img");
+                image.src = list_data[idx*4+3];
+                image.width = 200;
+                image.height = 200;
+                image.className = "product_img"
+
+                var name = document.createElement("p");
+                product_div.className = "product_name";
+                name.innerHTML = list_data[idx*4+1];
+
+                var price = document.createElement("p");
+                price.className = "product_price";
+                price.innerHTML = list_data[idx*4+2] + "(￦)";
+
+                product_div.append(image, name, price);
+
+                var site = "./Page_Product.jsp?";
+                                
+                (function(m){
+                    product_div.addEventListener("click", function(){
+                        location.href= site + "part=<%=part%>&part_id=" + list_data[m*4];
+                    },false );
+                })(idx);
+
+
+                document.getElementsByTagName("main")[0].appendChild(product_div);
             }
         }
         

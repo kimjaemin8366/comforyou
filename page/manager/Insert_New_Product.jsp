@@ -27,7 +27,7 @@
     String part = mr.getParameter("part");
     String manufacturer = mr.getParameter("Manufacturer");
     String date = mr.getParameter("date");
-    String imagepath = savePath + "/" + img;
+    String imagepath = "../../image/Product" + img;
 
     int cnt = Integer.parseInt(mr.getParameter("cnt"));
     String etc = "[";
@@ -96,6 +96,7 @@
         query3.setString(5, socket);
         query3.setString(6, etc);
         query3.executeUpdate();
+        success= true;
 
     }else if(part.equals("GPU")){
         String chipset = mr.getParameter("chipset_value");
@@ -107,6 +108,7 @@
         query3.setString(4, chipset);
         query3.setString(5, etc);
         query3.executeUpdate();
+        success= true;
 
     }else if(part.equals("RAM")){
         String size = mr.getParameter("size_value");
@@ -120,6 +122,7 @@
         query3.setString(5, ddr);
         query3.setString(6, etc);
         query3.executeUpdate();
+        success= true;
 
     }else if(part.equals("Disk")){
         String type = mr.getParameter("type_value");
@@ -138,6 +141,7 @@
         query3.setString(7, rpm);
         query3.setString(8, etc);
         query3.executeUpdate();
+        success= true;
 
     }else if(part.equals("Cooler")){
         String socket = mr.getParameter("socket_value");
@@ -149,6 +153,7 @@
         query3.setString(4, socket);
         query3.setString(5, etc);
         query3.executeUpdate();
+        success= true;
 
     }else if(part.equals("Power")){
         String type = mr.getParameter("type_value");
@@ -161,7 +166,8 @@
         query3.setString(4, type);
         query3.setString(5, power);
         query3.setString(6, etc);
-        query3.executeUpdate();      
+        query3.executeUpdate();
+        success= true;      
 
     }else if(part.equals("Tower")){
         String type = mr.getParameter("type_value");
@@ -175,6 +181,7 @@
         query3.setString(5, size);
         query3.setString(6, etc);
         query3.executeUpdate();
+        success= true;
     }
 
     

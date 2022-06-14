@@ -44,6 +44,10 @@ td{
     border: 1px solid black;
 }
 
+.td_date{
+    font-size: 12px;
+}
+
 .delete_button{
     width: 1%;
 }

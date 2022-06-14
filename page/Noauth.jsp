@@ -32,11 +32,11 @@
 <body>
     <header>
         <div id="homepage">
-            <input class="header_option_button" type="button" value="COM with me" onclick="location.href='../home.jsp'">
+            <input class="header_option_button" type="button" value="COM with me" onclick="location.href='./home.jsp'">
         </div>
         <div id="header_option">
-            <input class="header_option_button" type="button" value="Login"onclick="location.href='../login/Page_Login.jsp'">
-            <input class="header_option_button" type="button" value="Join" onclick="location.href='../join/Page_Join.jsp'">
+            <input class="header_option_button" type="button" value="Login"onclick="location.href='./login/Page_Login.jsp'">
+            <input class="header_option_button" type="button" value="Join" onclick="location.href='./join/Page_Join.jsp'">
         </div>
     </header>
     <nav id="header_menu">

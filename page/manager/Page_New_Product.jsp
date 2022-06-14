@@ -71,7 +71,7 @@
             <div>
                 <input type="button" value="속성 추가" class="prop_button" onclick="insert_tr()">
                 <input type="button" value="속성 제거" class="prop_button" onclick="delete_tr()">
-                <input type="hidden" name="cnt" value=1>
+                <input type="hidden" name="cnt" value="1">
             </div>
 
             <br>
@@ -126,7 +126,8 @@
     </main>
 
     <script>
-        var cnt = 1;
+        var cnt = document.getElementsByName("cnt")[0];
+
         function insert_tr(){
             var table = document.getElementById("table");
             var new_tr = document.createElement("tr");
@@ -151,7 +152,7 @@
             new_tr.append(new_th, new_td);
             table.appendChild(new_tr)
 
-            cnt += 1;
+            cnt.value = parseInt(cnt.value) + 1;
         }
         function delete_tr(){
             if(cnt==1){
@@ -159,7 +160,7 @@
             }
             var table = document.getElementById("table");
             table.removeChild(table.lastChild);
-            cnt-=1;
+            cnt.value = parseInt(cnt.value) - 1;
         }
 
         function move(part){
@@ -224,6 +225,10 @@
                 new_tr.append(new_th, new_td);
                 table.appendChild(new_tr)
             }
+        }
+
+        function move_site(part){
+            location.href = "../Products/Page_Product_List.jsp?part="+part;
         }
 
         window.onload = function(){

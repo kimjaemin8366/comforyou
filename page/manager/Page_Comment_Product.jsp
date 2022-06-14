@@ -20,6 +20,25 @@
     else if(!(ismanager.equals("1"))){
         response.sendRedirect("../Noauth.jsp");
     }
+
+
+    Class.forName("com.mysql.jdbc.Driver");
+    Connection connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/comforyou","james","8366");
+
+    Vector<String> list = new Vector<String>();
+    int cnt = 0;
+
+    String sql = "SELECT comment_id, part_id, comment_content, nickname, comment_date FROM component_comments ORDER BY comment_date DESC";
+    PreparedStatement query = connect.prepareStatement(sql);
+
+    ResultSet result = query.executeQuery();
+
+    while(result.next()){
+        for(int idx=1; idx<=5; idx++){
+            list.add(result.getString(idx));
+        }
+        cnt++;
+    }
 %>
 
 
@@ -71,13 +90,92 @@
             <div class="nav_filter_name" onclick="location.href='./Page_New_Product.jsp'">Post New Product</div>
         </div>
     </nav>
+    <main>
+        <table id="table">
+            <tr>
+                <th>Part_id</th>
+                <th style="width:80%"colspan=2>content</th>
+                <th>nickname</th>
+                <th>Date</th>
+            </tr>
+            <!-- <tr>
+                <td>CPU</td>
+                <td>1</td>
+                <td>Intel Core i9-12900 Processor</td>
+                <td class="delete_button">
+                    <input type="button" id="1" onclick="delete_list()" value="삭제">
+                </td>
+                <td>
+                    2022.03.22
+                </td>
+            </tr>
+            <tr>
+                <td>CPU</td>
+                <td>2</td>
+                <td>Intel Core i7-12700 Processor</td>
+                <td class="delete_button">
+                    <input type="button" onclick="delete_list()" value="삭제">
+                </td>
+                <td>
+                    2022.03.22
+                </td>
+            </tr> -->
+        </table>
+    </main>
 
     <script>
+        var now_filter = "";
+        function make_list(){
+            var table = document.getElementById("table");
+            var cnt = <%=cnt%>;
+
+            var list_string = "<%=list%>";
+            var list_data = list_string.substring(1, list_string.length-1).split(", ");
+
+            for(var idx=0; idx<cnt; idx++){
+                var new_tr = document.createElement("tr");
+                for(var idx2=0; idx2<6; idx2++){
+                    var new_td = document.createElement("td");
+                    if(idx2==0){
+                        continue;
+                    }
+                    if(idx2==3){
+                        new_td.className = "delete_button";
+
+                        var new_button = document.createElement("input");
+                        new_button.type="button";
+                        new_button.value ="삭제";
+                        (function(m){
+                            new_button.addEventListener("click", function(){
+                                delete_list(list_data[idx*5]);
+                            },false );
+                        })(idx);
+                        new_td.appendChild(new_button);
+                    }else if(idx2==4 || idx2==5){
+                        new_td.innerHTML = list_data[idx*4+idx2-1];
+                        new_td.className="td_date";
+                    }else{
+                        new_td.innerHTML = list_data[idx*4+idx2];
+                    }
+                    new_tr.appendChild(new_td);
+                }
+                table.appendChild(new_tr);
+            }
+        }
+
+        function delete_list(id){
+            if(confirm("삭제 하시겠습니까?")){
+                location.href="./Delete_Product_Comment.jsp?comment_id=" + id;
+            }   
+        }
 
         function move_site(part){
             location.href = "../Products/Page_Product_List.jsp?part="+part;
         }
 
+        window.onload = function(){
+            make_list();
+        }
     </script>
 
 </body>

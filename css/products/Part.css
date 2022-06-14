@@ -65,4 +65,20 @@ main{
     position: absolute;
     left: 300px;
     top: 320px;
+    display: flex;
+}
+
+.product_name{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 300px;
+    height: fit-content;
+    border: 1px solid black;
+    cursor: pointer;
+}
+
+.product_name p{
+    text-align: center;
+    font-size: 15px;
 }
