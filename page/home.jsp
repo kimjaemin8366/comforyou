@@ -3,6 +3,7 @@
 <%
     String logged_id = (String) session.getAttribute("logged_id");
     String nickname = (String) session.getAttribute("nickname");
+    String ismanager = (String) session.getAttribute("ismanager");
     Boolean logged = false;
     if(logged_id != null){
         logged = true;
@@ -22,10 +23,6 @@
         <div id="homepage">
             <input class="header_option_button" type="button" value="COM with me" onclick="location.href='./Home.jsp'">
         </div>
-        <div id="header_search">
-            <input id="search_space" type="text">
-            <input id="search_button" type="button" value="검색">
-        </div>
         <div id="header_option">
             <input class="header_option_button" type="button" value="Login"onclick="location.href='./login/Page_Login.jsp'">
             <input class="header_option_button" type="button" value="Join" onclick="location.href='./join/Page_Join.jsp'">
@@ -33,7 +30,7 @@
             <input class="header_option_logged" type="button" value="Logout" onclick="location.href='./login/Logout.jsp'">
         </div>
     </header>
-    <nav>
+    <nav id="header_menu">
         <input class="nav_button" type="button" value="CPU" onclick="move_site(this.value)">
         <input class="nav_button" type="button" value="Mainboard"  onclick="move_site(this.value)">
         <input class="nav_button" type="button" value="GPU"  onclick="move_site(this.value)">
@@ -42,7 +39,8 @@
         <input class="nav_button" type="button" value="Cooler"  onclick="move_site(this.value)">
         <input class="nav_button" type="button" value="Power"  onclick="move_site(this.value)">
         <input class="nav_button" type="button" value="Tower"  onclick="move_site(this.value)">
-        <input class="nav_button" type="button" value="Forum" onclick="move_site(this.value)">
+        <input class="nav_button" type="button" value="Forum" onclick="location.href='./Forum/Post_List.jsp'">
+        <input class="nav_button" type="button" value="Manager" onclick="move_manager_page()">
     </nav>
     <main>
         <section>
@@ -112,6 +110,16 @@
 
         function move_site(part){
             location.href = "../page/Products/Page_Product_List.jsp?part="+part;
+        }
+
+        function move_manager_page(){
+            var ismanager = "<%=ismanager%>";
+            if(ismanager==1){
+                location.href="./manager/Page_Manager.jsp";
+            }
+            else{
+                location.href="./Noauth.jsp";
+            }
         }
 
 

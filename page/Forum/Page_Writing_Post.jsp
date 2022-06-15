@@ -11,28 +11,35 @@
     String logged_id = (String) session.getAttribute("logged_id");
     String nickname = (String) session.getAttribute("nickname");
     String ismanager = (String) session.getAttribute("ismanager");
+
     Boolean logged = false;
     if(logged_id != null){
         logged = true;
     }
 
-    Vector<String> list = new Vector<String>();
-    int cnt = 0;
+    Vector<String> post_list = new Vector<String>();
+    String post_id = request.getParameter("post_id");
+    int modify_post_id = 0;
 
     Class.forName("com.mysql.jdbc.Driver");
     Connection connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/comforyou","james","8366");
 
+    if(post_id==null){
+        post_id = "";
+    }else{
+        modify_post_id = Integer.parseInt(post_id);
 
-    String sql = "SELECT post_id, post_title, nickname, post_date FROM posts ORDER BY post_date DESC";
-    PreparedStatement query = connect.prepareStatement(sql);
-
-    ResultSet result = query.executeQuery();
-
-    while(result.next()){
-        for(int idx=1; idx<=4; idx++){
-            list.add(result.getString(idx));
+        String post_sql = "SELECT post_title, post_content, nickname FROM posts WHERE post_id=?";
+        PreparedStatement post_query = connect.prepareStatement(post_sql);
+        post_query.setInt(1, modify_post_id);
+    
+        ResultSet result = post_query.executeQuery();
+    
+        if(result.next()){
+            for(int idx=1; idx<=3; idx++){
+                post_list.add(result.getString(idx));
+            }
         }
-        cnt++;
     }
     
     
@@ -44,8 +51,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet", type="text/css" href="../../css/Header.css">
-    <link rel="stylesheet", type="text/css" href="../../css/forum/post_list.css">
-    <title>Part</title>
+    <link rel="stylesheet", type="text/css" href="../../css/forum/writing_post.css">
+    <title>Post</title>
 </head>
 <body>
     <header>
@@ -73,34 +80,29 @@
     </nav>
 
     <main>
-        <div id="new_post_button_space">
-            <input type="button" id="new_post_button" value="New Post" onclick="location.href='./Page_Writing_Post.jsp'"> 
-        </div>
-        <table id="post_table">
-            <tr>
-                <th id="number">Post_id</th>
-                <th id="title" colspan="2">Title</th>
-                <th id="writer">Writer</th>
-                <th id="date">Date</th>
-            </tr>
-            <!-- <tr>
-                <td>1</td>
-                <td class="post_title">CPU 후기</td>
-                <td class="delete_button_space">
-                    <input type="button" class="delete_button" value="삭제">
-                </td>
-                <td>김재민</td>
-                <td>
-                    2022.4.26 10:30:00
-                </td>
-            </tr> -->
-        </table>
+        <form action="Upload_Post.jsp" onsubmit="before_upload()">
+            <div id="post_button_space">
+                <input type="submit" class="button" value="Upload">
+            </div>
+            <input type="hidden" id="post_id" name="post_id" value="0">
+            <table id="post_table">
+                <tr>
+                    <input type="text" id="title" name="title" placeholder="제목을 입력해주세요">
+                </tr>
+                <tr>
+                    <td>
+                        <textarea id="post_content" name="post_content" rows="50" placeholder="내용을 입력해주세요"></textarea>
+                    </td>
+                </tr>
+            </table>
+        </form>
+        <footer style="height:100px"></footer>
     </main>
 
     <script>
         window.onload= function(){
             if_logged();
-            make_list();
+            show_post();
         }
 
         function if_logged(){
@@ -114,59 +116,43 @@
                 for(var idx=1; idx<3; idx++){
                     document.getElementsByClassName("header_option_button")[idx].style.display = "none";
                 }
+            }else{
+                alert("로그인 해주세요.");
+                location.href="../login/Page_Login.jsp";
             }
         }
 
-        function make_list(){
-            var list_string = "<%=list%>";
-            var cnt = <%=cnt%>;
-            var list_data = list_string.substring(1, list_string.length-1).split(", ");
+        function show_post(){
+            var modify_post_id = <%=modify_post_id%>;
             var nickname = "<%=nickname%>";
-            var ismanager = "<%=ismanager%>"
-            var table = document.getElementById("post_table");
-            for(var idx=0; idx<cnt; idx++){
-                var new_tr= document.createElement("tr");
 
-                var id_td = document.createElement("td");
-                id_td.innerHTML = list_data[idx*4];
-                var title_td = document.createElement("td");
-                title_td.innerHTML = list_data[idx*4+1];
-                title_td.className = "post_title";
-                (function(m){
-                    title_td.addEventListener("click", function(){
-                        location.href= "./Page_Post.jsp?post_id=" + list_data[m*4];
-                    },false );
-                })(idx);
+            if(modify_post_id > 0){
+                var post_string = "<%=post_list%>";
+                var post_data = post_string.substring(1, post_string.length-1).split(", ");
 
-                var writer_td= document.createElement("td");
-                writer_td.innerHTML = list_data[idx*4+2];
-                var date_td = document.createElement("td");
-                date_td.innerHTML = list_data[idx*4+3];
-
-                if(nickname == list_data[idx*4+2] || ismanager=="1"){
-                    var button_td = document.createElement("td");
-                    button_td.className = "delete_button_space";
-                    var button = document.createElement("input");
-                    button.type = "button";
-                    button.className = "delete_button";
-                    button.value = "삭제";
-                    (function(m){
-                        button.addEventListener("click", function(){
-                            if(confirm("게시물을 삭제하시겠습니까?")){
-                                location.href= "./Delete_Post.jsp?post_id=" + list_data[m*4];
-                            }
-                        },false );
-                    })(idx);
-                    button_td.appendChild(button);
-                    
-
-                    new_tr.append(id_td, title_td, button_td, writer_td, date_td);
+                if(nickname == post_data[2]){
+                    document.getElementById("post_id").value = modify_post_id;
+                    document.getElementById("title").value = post_data[0];
+                    document.getElementById("post_content").innerHTML = post_data[1].replaceAll("<br>","\r\n");;
                 }else{
-                    title_td.setAttribute("colspan", "2");
-                    new_tr.append(id_td, title_td, writer_td, date_td);
+                    location.href= "../Noauth.jsp";
                 }
+            }
 
-                table.appendChild(new_tr);
+        }
+
+        function before_upload(){
+            var title = document.getElementById("title").value;
+            var textarea = document.getElementById("post_content").value;
+            if(title==""){
+                alert("제목을 입력해주세요.");
+                event.preventDefault();
+                return;
+            }
+            if(textarea == ""){
+                alert("내용을 입력해주세요.");
+                event.preventDefault();
+                return;
             }
         }
 

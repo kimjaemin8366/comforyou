@@ -1,33 +1,22 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
-<%@ page import="java.sql.DriverManager" %> 
-<%@ page import="java.sql.Connection" %>
-<%@ page import="java.sql.PreparedStatement" %> 
-<%@ page import="java.sql.ResultSet" %> 
-
 <%
     String logged_id = (String) session.getAttribute("logged_id");
+    String nickname = (String) session.getAttribute("nickname");
+    String ismanager = (String) session.getAttribute("ismanager");
     Boolean logged = false;
     if(logged_id != null){
         logged = true;
     }
-
-    String part = request.getParameter("part");
-    String option = request.getParameter("option");
-
-    if(part=="" || part==null){
-        
-    }
 %>
-
 
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet", type="text/css" href="../../css/Header.css">
-    <link rel="stylesheet", type="text/css" href="../../css//products/Part.css">
-    <title>Part</title>
+    <link rel="stylesheet", type="text/css" href="../css/Header.css">
+    <link rel="stylesheet", type="text/css" href="../css/Noauth.css">
+    <title>No permission</title>
 </head>
 <body>
     <header>
@@ -37,6 +26,8 @@
         <div id="header_option">
             <input class="header_option_button" type="button" value="Login"onclick="location.href='./login/Page_Login.jsp'">
             <input class="header_option_button" type="button" value="Join" onclick="location.href='./join/Page_Join.jsp'">
+            <p class="header_option_logged" id="header_nickname_space"></p>
+            <input class="header_option_logged" type="button" value="Logout" onclick="location.href='..login/Logout.jsp'">
         </div>
     </header>
     <nav id="header_menu">
@@ -48,10 +39,35 @@
         <input class="nav_button" type="button" value="Cooler"  onclick="move_site(this.value)">
         <input class="nav_button" type="button" value="Power"  onclick="move_site(this.value)">
         <input class="nav_button" type="button" value="Tower"  onclick="move_site(this.value)">
-        <input class="nav_button" type="button" value="Forum" onclick="move_site(this.value)">
-    </nav>
+        <input class="nav_button" type="button" value="Forum" onclick="location.href='./Forum/Post_List.jsp'">
+        <input class="nav_button" type="button" value="Manager" onclick="move_manager_page()">
     <main>
-        <div>No permission</div>
+        <p>No Permission</p>
+        <input id="gohome_button" type="button" value="Go Home" onclick="location.href='./home.jsp'">
     </main>
+
+    <script>
+        window.onload= function(){
+            if_logged();
+        }
+
+        function if_logged(){
+            var nick = "<%=nickname%>";
+            var logged = <%=logged%>;
+            if(logged){
+                document.getElementsByClassName("header_option_logged")[0].innerHTML = nick;
+                for(var idx=0; idx<2; idx++){
+                    document.getElementsByClassName("header_option_logged")[idx].style.display = "block";
+                }
+                for(var idx=1; idx<3; idx++){
+                    document.getElementsByClassName("header_option_button")[idx].style.display = "none";
+                }
+            }
+        }
+
+        function move_site(part){
+            location.href = "../page/Products/Page_Product_List.jsp?part="+part;
+        }
+    </script>
 
 </body>

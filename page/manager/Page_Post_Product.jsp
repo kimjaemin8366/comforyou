@@ -8,7 +8,9 @@
 
 <%
     String logged_id = (String) session.getAttribute("logged_id");
+    String nickname = (String) session.getAttribute("nickname");
     String ismanager = (String) session.getAttribute("ismanager");
+    
     Boolean logged = false;
     if(logged_id != null){
         logged = true;
@@ -58,6 +60,8 @@
         <div id="header_option">
             <input class="header_option_button" type="button" value="Login"onclick="location.href='../login/Page_Login.jsp'">
             <input class="header_option_button" type="button" value="Join" onclick="location.href='../join/Page_Join.jsp'">
+            <p class="header_option_logged" id="header_nickname_space"></p>
+            <input class="header_option_logged" type="button" value="Logout" onclick="location.href='./login/Logout.jsp'">
         </div>
     </header>
     <nav id="header_menu">
@@ -69,7 +73,8 @@
         <input class="nav_button" type="button" value="Cooler"  onclick="move_site(this.value)">
         <input class="nav_button" type="button" value="Power"  onclick="move_site(this.value)">
         <input class="nav_button" type="button" value="Tower"  onclick="move_site(this.value)">
-        <input class="nav_button" type="button" value="Forum" onclick="move_site(this.value)">
+        <input class="nav_button" type="button" value="Forum" onclick="location.href='../Forum/Post_List.jsp'">
+        <input class="nav_button" type="button" value="Manager" onclick="move_manager_page()">
     </nav>
     <nav id="nav_menu">
         <div id="nav_filter"><p>Filter</p></div>
@@ -124,6 +129,12 @@
     </main>
 
     <script>
+
+        window.onload = function(){
+            if_logged();
+            make_list();
+        }
+
         var now_filter = "";
         function make_list(){
             var table = document.getElementById("table");
@@ -167,13 +178,34 @@
             }   
         }
 
+        function move_manager_page(){
+            var ismanager = "<%=ismanager%>";
+            if(ismanager==1){
+                location.href="../manager/Page_Manager.jsp";
+            }
+            else{
+                location.href="../Noauth.jsp";
+            }
+        }
+
+        function if_logged(){
+            var nick = "<%=nickname%>";
+            var logged = <%=logged%>;
+            if(logged){
+                document.getElementsByClassName("header_option_logged")[0].innerHTML = nick;
+                for(var idx=0; idx<2; idx++){
+                    document.getElementsByClassName("header_option_logged")[idx].style.display = "block";
+                }
+                for(var idx=1; idx<3; idx++){
+                    document.getElementsByClassName("header_option_button")[idx].style.display = "none";
+                }
+            }
+        }
+
         function move_site(part){
             location.href = "../Products/Page_Product_List.jsp?part="+part;
         }
 
-        window.onload = function(){
-            make_list();
-        }
     </script>
 
 </body>

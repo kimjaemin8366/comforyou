@@ -1,0 +1,53 @@
+main{
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 100px;
+    width: 80%;
+}
+
+#new_post_button_space{
+    display: flex;
+    justify-content: end;
+}
+
+#new_post_button{
+    background-color: #00000000;
+    height: 40px;
+    cursor: pointer;
+}
+table{
+    border: 1px solid black;
+    border-collapse: collapse;
+    width: 100%;
+}
+th{
+    border: 1px solid black;
+    text-align: center;
+}
+tr, td{
+    border: 1px solid black;
+    text-align: center;
+}
+
+#number{
+    width: 3%;
+}
+
+#title{
+    width: 80%;
+}
+
+.post_title{
+    cursor: pointer;
+    text-align: left;
+}
+
+.delete_button_space{
+    width: 1%;
+}
+
+.delete_button{
+    background-color: #00000000;
+    border: 0;
+    cursor: pointer;
+}

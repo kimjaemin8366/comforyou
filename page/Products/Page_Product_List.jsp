@@ -10,6 +10,7 @@
 <%
     String logged_id = (String) session.getAttribute("logged_id");
     String nickname = (String) session.getAttribute("nickname");
+    String ismanager = (String) session.getAttribute("ismanager");
     Boolean logged = false;
     if(logged_id != null){
         logged = true;
@@ -24,8 +25,9 @@
     
     Vector<String> list = new Vector<String>();
     int cnt = 0;
+    String s = "";
     Class.forName("com.mysql.jdbc.Driver");
-        Connection connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/comforyou","james","8366");
+    Connection connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/comforyou","james","8366");
 
     if(option=="" || option==null){
 
@@ -44,7 +46,7 @@
     }else{
         String[] filter = option.split("_");
         String sql = "SELECT component.part_id, part_name, part_price, imagepath FROM component LEFT JOIN component_" + part.toLowerCase() + " ON component.part_id = component_" + part.toLowerCase() + ".part_id WHERE part_type='" +part+ "' AND " + filter[0] + "='" + filter[1] + "'";    
-
+        s = sql;
         Statement stmt = connect.createStatement();
         ResultSet result = stmt.executeQuery(sql);
 
@@ -77,7 +79,7 @@
             <input class="header_option_button" type="button" value="Login"onclick="location.href='../login/Page_Login.jsp'">
             <input class="header_option_button" type="button" value="Join" onclick="location.href='../join/Page_Join.jsp'">
             <p class="header_option_logged" id="header_nickname_space"></p>
-            <input class="header_option_logged" type="button" value="Logout" onclick="location.href='./login/Logout.jsp'">
+            <input class="header_option_logged" type="button" value="Logout" onclick="location.href='../login/Logout.jsp'">
         </div>
     </header>
     <nav id="header_menu">
@@ -89,7 +91,8 @@
         <input class="nav_button" type="button" value="Cooler"  onclick="move_site(this.value)">
         <input class="nav_button" type="button" value="Power"  onclick="move_site(this.value)">
         <input class="nav_button" type="button" value="Tower"  onclick="move_site(this.value)">
-        <input class="nav_button" type="button" value="Forum" onclick="move_site(this.value)">
+        <input class="nav_button" type="button" value="Forum" onclick="location.href='../Forum/Post_List.jsp'">
+        <input class="nav_button" type="button" value="Manager" onclick="move_manager_page()">
     </nav>
     <nav id="nav_menu">
         <div id="nav_filter"><p>Filter</p></div>
@@ -103,6 +106,7 @@
 
         
         window.onload = function(){
+            console.log("<%=s%>")
             show_product_list_nav();
             if_logged();
             product_list(); 
@@ -173,9 +177,9 @@
         }
 
         function cpu_filter(){
-            var manufacturer = ["Manufacturer", "Intel", "AMD"];
-            var core = ["Core", "16+8", "8+8", "8+4"];
-            var ddr = ["DDR", "DDR5", "DDR4", "DDR3"];
+            var manufacturer = ["manufacturer", "Intel", "AMD"];
+            var core = ["core", "16 and 8", "8 and 8", "8 and 4"];
+            var ddr = ["ddr", "DDR5", "DDR4", "DDR3"];
             var filters = [manufacturer, core, ddr];
 
             var menu = document.getElementById("nav_menu");
@@ -188,9 +192,9 @@
 
         function mainboard_filter(){
 
-            var manufacturer = ["Manufacturer","ASUS", "MSI", "GIGABYTE"];
-            var usefor = ["Usefor", "Intel", "AMD"];
-            var socket = ["Socket", "1700", "1200", "AM4", "sWRX8"];
+            var manufacturer = ["manufacturer","ASUS", "MSI", "GIGABYTE"];
+            var usefor = ["usefor", "Intel", "AMD"];
+            var socket = ["socket", "1700", "1200", "AM4", "sWRX8"];
             var filters = [manufacturer, usefor, socket];
 
             var menu = document.getElementById("nav_menu");
@@ -202,8 +206,8 @@
         }
 
         function gpu_filter(){
-            var manufacturer = ["Manufacturer","MSI", "Emtek", "GIGABYTE", "ASUS"];
-            var chipset = ["Chipset", "NVIDIA", "AMD"];
+            var manufacturer = ["manufacturer","MSI", "Emtek", "GIGABYTE", "ASUS"];
+            var chipset = ["chipset", "NVIDIA", "AMD"];
             var filters = [manufacturer, chipset];
 
             var menu = document.getElementById("nav_menu");
@@ -215,9 +219,9 @@
         }
 
         function ram_filter(){
-            var manufacturer = ["Manufacturer", "Samsung", "Micron"];
-            var size = ["Memory Size","16GB", "8GB", "4GB"];
-            var ddr = ["DDR", "DDR5", "DDR4", "DDR3"];
+            var manufacturer = ["manufacturer", "Samsung", "Micron"];
+            var size = ["size","16GB", "8GB", "4GB"];
+            var ddr = ["ddr", "DDR5", "DDR4", "DDR3"];
             var filters = [manufacturer, size, ddr];
 
             var menu = document.getElementById("nav_menu");
@@ -229,11 +233,11 @@
         }
 
         function disk_filter(){
-            var disk = ["Disk", "SSD", "HDD"]
-            var manufacturer = ["Samsung", "SK Hynix", "Micron", "Seagate", "TOSHIBA"];
-            var size = ["Memory Size","4TB", "2TB", "1TB", "512GB"];
+            var disk = ["disk", "SSD", "HDD"]
+            var manufacturer = ["manufacturer", "Samsung", "SK Hynix", "Micron", "Seagate", "TOSHIBA"];
+            var size = ["size","4TB", "2TB", "1TB", "512GB"];
             var interface = ["interface", "SATA3", "PCIe4.0", "PCIe3.0"];
-            var rpm = ["RPM", "15000", "10000", "7200"]
+            var rpm = ["rpm", "15000", "10000", "7200"]
             var filters = [disk, manufacturer, size, interface, rpm];
 
             var menu = document.getElementById("nav_menu");
@@ -245,8 +249,8 @@
         }
 
         function cooler_filter(){
-            var manufacturer = ["Manufacturer", "PCCOOLER", "NZXT", "DEEPCOOL"];
-            var socket = ["Socket", "1700", "1200", "AM4", "sWRX8"];
+            var manufacturer = ["manufacturer", "PCCOOLER", "NZXT", "DEEPCOOL"];
+            var socket = ["socket", "1700", "1200", "AM4", "sWRX8"];
             var filters = [manufacturer, socket];
 
             var menu = document.getElementById("nav_menu");
@@ -258,9 +262,9 @@
         }
 
         function power_filter(){
-            var manufacturer = ["Manufacturer", "Micronics", "Seasonic", "PSP"];
-            var type = ["Type", "ATX", "M-ATX(SFX)", "TFX", "Server"]
-            var power = ["Power", "700W~", "600~699W", "500~599W", "499W"];
+            var manufacturer = ["manufacturer", "Micronics", "Seasonic", "PSP"];
+            var type = ["type", "ATX", "M-ATX(SFX)", "TFX", "Server"]
+            var power = ["power", "700W~", "600~699W", "500~599W", "499W"];
             var filters = [manufacturer, type, power];
 
             var menu = document.getElementById("nav_menu");
@@ -272,9 +276,9 @@
         }
 
         function tower_filter(){
-            var manufacturer = ["Manufacturer","Abko", "darkFlash", "Micronics"];
-            var type = ["Type", "ATX", "M-ATX", "RTX"]
-            var size = ["Size", "Big", "Middle", "Mini"];
+            var manufacturer = ["manufacturer","Abko", "darkFlash", "Micronics"];
+            var type = ["type", "ATX", "M-ATX", "RTX"]
+            var size = ["size", "Big", "Middle", "Mini"];
             var filters = [manufacturer, type, size];
 
             var menu = document.getElementById("nav_menu");
@@ -323,10 +327,22 @@
                 document.getElementsByTagName("main")[0].appendChild(product_div);
             }
         }
+
+        function move_manager_page(){
+            var ismanager = "<%=ismanager%>";
+            if(ismanager==1){
+                location.href="../manager/Page_Manager.jsp";
+            }
+            else{
+                location.href="../Noauth.jsp";
+            }
+        }
         
         function move_site(part){
             location.href = "./Page_Product_List.jsp?part="+part;
         }
+
+        
 
     </script>
 </body>

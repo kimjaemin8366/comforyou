@@ -10,6 +10,7 @@
 <%
     String logged_id = (String) session.getAttribute("logged_id");
     String nickname = (String) session.getAttribute("nickname");
+    String ismanager = (String) session.getAttribute("ismanager");
     Boolean logged = false;
     if(logged_id != null){
         logged = true;
@@ -25,7 +26,6 @@
 
 
     String sql = "SELECT * FROM component LEFT JOIN component_" + part.toLowerCase() + " ON component.part_id = component_" + part.toLowerCase() + ".part_id WHERE component.part_id = " + part_id;
-
     Statement stmt = connect.createStatement();
     ResultSet result = stmt.executeQuery(sql);
 
@@ -45,7 +45,19 @@
             list.add(result.getString(idx));
         }
     }
-    
+
+    Vector<String> comment_list = new Vector<String>();
+    String comment_sql = "SELECT comment_id, comment_content, nickname, comment_date FROM component_comments WHERE part_id = ?";
+    PreparedStatement comment_query = connect.prepareStatement(comment_sql);
+    comment_query.setInt(1, part_id);
+    ResultSet comment_result = comment_query.executeQuery();
+    int comment_cnt = 0;
+    while(comment_result.next()){
+        for(int idx=1; idx<=4; idx++){
+            comment_list.add(comment_result.getString(idx));
+        }
+        comment_cnt += 1;
+    }
 %>
 
 <head>
@@ -65,7 +77,7 @@
             <input class="header_option_button" type="button" value="Login"onclick="location.href='../login/Page_Login.jsp'">
             <input class="header_option_button" type="button" value="Join" onclick="location.href='../join/Page_Join.jsp'">
             <p class="header_option_logged" id="header_nickname_space"></p>
-            <input class="header_option_logged" type="button" value="Logout" onclick="location.href='./login/Logout.jsp'">
+            <input class="header_option_logged" type="button" value="Logout" onclick="location.href='../login/Logout.jsp'">
         </div>
     </header>
     <nav id="header_menu">
@@ -77,53 +89,76 @@
         <input class="nav_button" type="button" value="Cooler"  onclick="move_site(this.value)">
         <input class="nav_button" type="button" value="Power"  onclick="move_site(this.value)">
         <input class="nav_button" type="button" value="Tower"  onclick="move_site(this.value)">
-        <input class="nav_button" type="button" value="Forum" onclick="move_site(this.value)">
+        <input class="nav_button" type="button" value="Forum" onclick="location.href='../Forum/Post_List.jsp'">
+        <input class="nav_button" type="button" value="Manager" onclick="move_manager_page()">
     </nav>
 
     <main>
         <div id="Product_Content">
             <div id="Product_image_space">
-                <img id="Product_image" src="../../image/Product/i9-12900.jpg">
+                <img id="Product_image">
             </div>
             <div id="Product_simple_descript">
                 <div id="Product_Name">
-                    <p id="name">Intel® Core™ i9-12900 Processor</p>
+                    <p id="name"></p>
                 </div>
                 <div id="Product_Cost">
-                    <p id="cost"> 746480 (₩)</p>
+                    <p id="cost"></p>
                 </div>
                 <div id="Buy_button_space">
-                    <input id="Buy_button" type="button" value="Buy Now" onclick="location.href='../Products/Page_Purchase.jsp'">
+                    <input id="Buy_button" type="button" value="Buy Now" onclick="location.href='../Products/Page_Purchase.jsp?'">
                 </div>
             </div>
         </div>
         <div id="Product_description_table">
             <table id="product_table">
                 <tr>
-                    <td class="attribute">제품회사</td>
-                    <td class="table_content" id="manufacturer">Intel</td>
-                    <td class="attribute">출시일</td>
-                    <td class="table_content" id="release_date">2021 4분기</td>
+                    <td class="attribute">manufacturer</td>
+                    <td class="table_content" id="manufacturer"></td>
+                    <td class="attribute">release_date</td>
+                    <td class="table_content" id="release_date"></td>
                 </tr>
             </table>
         </div>
         <div id="Comments_Space">
-            <div id="Comments_Input">
-                <input id="Comments_Input_text" type="text" value="의견을 입력하세요">
-                <input id="Comments_Input_button" type="button" value="제출">
+            <form action="Insert_New_Product_Comment.jsp" id="Comments_Input" onsubmit="before_insert()">
+                <input type="hidden" name="part" value="<%=part%>">
+                <input type="hidden" name="part_id" value="<%=part_id%>">
+                <input id="Comments_Input_text" name="comment" type="text" placeholder="의견을 입력하세요">
+                <input id="Comments_Input_button" type="submit" value="제출">
+            </form>
+
+            <div id="Comment_list">
+                <table id="Comment_table">
+                    <!-- <tr>
+                        <td class="Comment_content">이거 완전 좋음</td>
+                        <td class="Comment_info">
+                            <p class="Comment_writer">김재민</p>
+                            <p class="Comment_date">2022.12.27 10:00:00</p>
+                        </td>
+                        <td>
+                            <input type="button" class="Comment_delete" value="삭제" onclick="delete_comment()">
+                        </td>
+                    </tr> -->
+                </table>
+
             </div>
         </div>
+
+        <footer style="height: 100px"></footer>
     </main>
 
     <script>
         window.onload = function(){
-
             if_logged();
             make_screen();
+            
         }
 
+        
+
         function make_screen(){
-            var cpu = ["core", "socket"];
+            var cpu = ["core", "ddr"];
             var board = ["usefor", "socket"];
             var gpu = ["chipset"];
             var ram = ["size","ddr"];
@@ -134,15 +169,19 @@
 
             var list_string = "<%=list%>";
             var list_data = list_string.substring(1, list_string.length-1).split(", ");
-            console.log(list_data);
             var etc_length = list_data[list_data.length-1].length;
             var etc_data = list_data[list_data.length-1].substring(1, etc_length-1).split(",");
             var etc_cnt = etc_data.length;
+
+            document.getElementById("Buy_button").addEventListener("click", function(){
+                location.href= "../Products/Page_Purchase.jsp?part_id=" + list_data[0];
+            })
 
             document.getElementById("name").innerHTML = list_data[1];
             document.getElementById("cost").innerHTML = list_data[3] + "(￦)";
             document.getElementById("Product_image").setAttribute("src", list_data[6]);
             document.getElementById("release_date").innerHTML = list_data[8];
+            document.getElementById("manufacturer").innerHTML = list_data[9];
             var part = "<%=part%>";
 
             if(part=="CPU"){
@@ -167,6 +206,8 @@
             else if(part=="Tower"){
                 make_table(tower, list_data, etc_data);
             }
+
+            make_comment_list();
         }
 
         function make_table(part, list_data, etc_data){
@@ -228,8 +269,6 @@
                 rowcnt = parseInt((td_list.length/4) +1);
                 rowcnt_odd = true;
             }
-            console.log(rowcnt);
-            console.log(td_list);
 
             for(var idx=0; idx<rowcnt; idx++){
                 var new_tr=  document.createElement("tr");
@@ -244,8 +283,55 @@
             
         }
 
-        function move_site(part){
-            location.href = "./Page_Product_List.jsp?part="+part;
+        function make_comment_list(){
+            var comment_list_string = "<%=comment_list%>";
+            var comment_list_data = comment_list_string.substring(1, comment_list_string.length-1).split(", ");
+            var cnt = <%=comment_cnt%>;
+            var nickname = "<%=nickname%>";
+            var ismanager = "<%=ismanager%>";
+            var table = document.getElementById("Comment_table");
+            
+            for(var idx=0; idx<cnt; idx++){
+                var new_tr = document.createElement("tr");
+                var content_td = document.createElement("td");
+                content_td.className="Comment_content";
+                content_td.innerHTML =comment_list_data[idx*4+1];
+                
+                var info_td = document.createElement("td");
+                info_td.className = "Comment_info";
+                var writer_p = document.createElement("p");
+                writer_p.className="Comment_writer";
+                writer_p.innerHTML = comment_list_data[idx*4+2];
+                var date_p = document.createElement("p");
+                date_p.className = "Comment_date";
+                date_p.innerHTML = comment_list_data[idx*4+3];
+                info_td.append(writer_p, date_p);
+
+                if(nickname==comment_list_data[idx*4+2] || ismanager=="1"){
+                    var button_td = document.createElement("td");
+                    var button = document.createElement("input");
+                    button.type="button";
+                    button.className="Comment_delete";
+                    button.value = "삭제";
+                    (function(m){
+                        button.addEventListener("click", function(){
+                            delete_comment(comment_list_data[m*4]);
+                        },false );
+                    })(idx);
+
+                    button_td.appendChild(button);
+                    new_tr.append(content_td, info_td, button_td);
+                }else{
+                    new_tr.append(content_td, info_td);
+                }
+                table.appendChild(new_tr);
+            }
+        }
+
+        function delete_comment(comment_id){
+            if(confirm("삭제하시겠습니까?")){
+                location.href="./Delete_Product_Comment.jsp?part=<%=part%>&part_id=<%=part_id%>&comment_id="+comment_id;
+            }
         }
 
         
@@ -262,5 +348,20 @@
                 }
             }
         }
+
+        function move_manager_page(){
+            var ismanager = "<%=ismanager%>";
+            if(ismanager==1){
+                location.href="../manager/Page_Manager.jsp";
+            }
+            else{
+                location.href="../Noauth.jsp";
+            }
+        }
+
+        function move_site(part){
+            location.href = "./Page_Product_List.jsp?part="+part;
+        }
+
     </script>
 </body>
