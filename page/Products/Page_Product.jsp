@@ -71,7 +71,7 @@
 <body>
     <header>
         <div id="homepage">
-            <input class="header_option_button" type="button" value="COM with me" onclick="location.href='../home.jsp'">
+            <input class="header_option_button" type="button" value="COM for you" onclick="location.href='../home.jsp'">
         </div>
         <div id="header_option">
             <input class="header_option_button" type="button" value="Login"onclick="location.href='../login/Page_Login.jsp'">
@@ -85,7 +85,7 @@
         <input class="nav_button" type="button" value="Mainboard"  onclick="move_site(this.value)">
         <input class="nav_button" type="button" value="GPU"  onclick="move_site(this.value)">
         <input class="nav_button" type="button" value="RAM"  onclick="move_site(this.value)">
-        <input class="nav_button" type="button" value="SSD&HDD"  onclick="move_site(this.value)">
+        <input class="nav_button" type="button" value="Disk"  onclick="move_site(this.value)">
         <input class="nav_button" type="button" value="Cooler"  onclick="move_site(this.value)">
         <input class="nav_button" type="button" value="Power"  onclick="move_site(this.value)">
         <input class="nav_button" type="button" value="Tower"  onclick="move_site(this.value)">
@@ -124,7 +124,7 @@
             <form action="Insert_New_Product_Comment.jsp" id="Comments_Input" onsubmit="before_insert()">
                 <input type="hidden" name="part" value="<%=part%>">
                 <input type="hidden" name="part_id" value="<%=part_id%>">
-                <input id="Comments_Input_text" name="comment" type="text" placeholder="의견을 입력하세요">
+                <input id="Comments_Input_text" name="comment" type="text" placeholder="한줄 의견을 입력하세요">
                 <input id="Comments_Input_button" type="submit" value="제출">
             </form>
 
@@ -162,8 +162,8 @@
             var board = ["usefor", "socket"];
             var gpu = ["chipset"];
             var ram = ["size","ddr"];
-            var disk = ["disk", "size, interface", "rpm"];
-            var cooler = ["socket"];
+            var disk = ["disk", "size", "interface", "rpm"];
+            var cooler = ["method"];
             var power = ["tower", "power"];
             var tower = ["type", "size"];
 
@@ -210,28 +210,31 @@
             make_comment_list();
         }
 
+        //제품 정보 테이블
+
         function make_table(part, list_data, etc_data){
             var table = document.getElementById("product_table");
             var list_cnt = (list_data.length-11);
             var etc_cnt = (etc_data.length)/2;
-            if(rowcnt==0){
-                if(cnt==0){
+            if(etc_data.length==1){
+                if(list_cnt==1){
+                    var new_tr = document.createElement("tr");
+                    
+                    var new_td_1 = document.createElement("td");
+                    new_td_1.className = "attribute";
+                    new_td_1.innerHTML = part[0];
+
+                    var new_td_2  = document.createElement("td");
+                    new_td_2.className = "table_content";
+                    new_td_2.innerHTML = list_data[list_data.length-2];
+
+                    new_tr.append(new_td_1, new_td_2);
+                    table.appendChild(new_tr);
                     return;
                 }
-                var new_tr = document.createElement("tr");
-                
-                var new_td_1 = document.createElement("td");
-                new_td_1.className = "attribute";
-                new_td_1.innerHTML = part[0];
-
-                var new_td_2  = document.createElement("td");
-                new_td_2.className = "table_content";
-                new_td_2.innerHTML = list_data[list_data.length-2];
-
-                new_tr.append(new_td_1, new_td_2);
-                table.appendChild(new_tr);
-                return;
             }
+
+            // 각 제품별 정보를 td에 담음
 
             var td_list = [];
             for(var idx=list_cnt-1; idx>=0; idx--){
@@ -247,6 +250,10 @@
                 td_list.push(new_td_2);
             }
 
+            if(etc_data.length==1){
+                etc_cnt=0;
+            }
+
             for(var idx=0; idx<etc_cnt; idx++){
                 var new_td_1 = document.createElement("td");
                 new_td_1.className = "attribute";
@@ -260,6 +267,8 @@
                 td_list.push(new_td_2);
                 
             }
+
+            // etc 옵션들
 
             var rowcnt = 0;
             var rowcnt_odd = false;
@@ -282,6 +291,8 @@
             }
             
         }
+
+        //댓글 목록 
 
         function make_comment_list(){
             var comment_list_string = "<%=comment_list%>";
@@ -328,12 +339,15 @@
             }
         }
 
+        // 댓글 삭제 확인
+
         function delete_comment(comment_id){
             if(confirm("삭제하시겠습니까?")){
                 location.href="./Delete_Product_Comment.jsp?part=<%=part%>&part_id=<%=part_id%>&comment_id="+comment_id;
             }
         }
 
+        // 로그인 여부
         
         function if_logged(){
             var nick = "<%=nickname%>";

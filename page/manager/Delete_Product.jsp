@@ -35,9 +35,6 @@
 <body>
     <script>
         window.onload = function(){
-            if(<%=success%>){
-                
-            }
             location.href="./Page_Post_Product.jsp";
         }
     </script>

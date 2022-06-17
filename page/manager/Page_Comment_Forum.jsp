@@ -54,7 +54,7 @@
 <body>
     <header>
         <div id="homepage">
-            <input class="header_option_button" type="button" value="COM with me" onclick="location.href='../home.jsp'">
+            <input class="header_option_button" type="button" value="COM for you" onclick="location.href='../home.jsp'">
         </div>
         <div id="header_option">
             <input class="header_option_button" type="button" value="Login"onclick="location.href='../login/Page_Login.jsp'">
@@ -68,7 +68,7 @@
         <input class="nav_button" type="button" value="Mainboard"  onclick="move_site(this.value)">
         <input class="nav_button" type="button" value="GPU"  onclick="move_site(this.value)">
         <input class="nav_button" type="button" value="RAM"  onclick="move_site(this.value)">
-        <input class="nav_button" type="button" value="SSD&HDD"  onclick="move_site(this.value)">
+        <input class="nav_button" type="button" value="Disk"  onclick="move_site(this.value)">
         <input class="nav_button" type="button" value="Cooler"  onclick="move_site(this.value)">
         <input class="nav_button" type="button" value="Power"  onclick="move_site(this.value)">
         <input class="nav_button" type="button" value="Tower"  onclick="move_site(this.value)">
@@ -129,12 +129,11 @@
 
     <script>
 
-window.onload = function(){
+        window.onload = function(){
             if_logged();
             make_list();
         }
         
-        var now_filter = "";
         function make_list(){
             var table = document.getElementById("table");
             var cnt = <%=cnt%>;
@@ -162,10 +161,10 @@ window.onload = function(){
                         })(idx);
                         new_td.appendChild(new_button);
                     }else if(idx2==4 || idx2==5){
-                        new_td.innerHTML = list_data[idx*4+idx2-1];
+                        new_td.innerHTML = list_data[idx*5+idx2-1];
                         new_td.className="td_date";
                     }else{
-                        new_td.innerHTML = list_data[idx*4+idx2];
+                        new_td.innerHTML = list_data[idx*5+idx2];
                     }
                     new_tr.appendChild(new_td);
                 }

@@ -48,6 +48,11 @@ td{
     font-size: 12px;
 }
 
+input[type="button"]{
+    background-color: #00000000;
+    border: 0;
+}
+
 .delete_button{
     width: 1%;
 }

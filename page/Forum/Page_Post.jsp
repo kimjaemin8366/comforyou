@@ -63,7 +63,7 @@
 <body>
     <header>
         <div id="homepage">
-            <input class="header_option_button" type="button" value="COM with me" onclick="location.href='../home.jsp'">
+            <input class="header_option_button" type="button" value="COM for you" onclick="location.href='../home.jsp'">
         </div>
         <div id="header_option">
             <input class="header_option_button" type="button" value="Login"onclick="location.href='../login/Page_Login.jsp'">
@@ -77,7 +77,7 @@
         <input class="nav_button" type="button" value="Mainboard"  onclick="move_site(this.value)">
         <input class="nav_button" type="button" value="GPU"  onclick="move_site(this.value)">
         <input class="nav_button" type="button" value="RAM"  onclick="move_site(this.value)">
-        <input class="nav_button" type="button" value="SSD&HDD"  onclick="move_site(this.value)">
+        <input class="nav_button" type="button" value="Disk"  onclick="move_site(this.value)">
         <input class="nav_button" type="button" value="Cooler"  onclick="move_site(this.value)">
         <input class="nav_button" type="button" value="Power"  onclick="move_site(this.value)">
         <input class="nav_button" type="button" value="Tower"  onclick="move_site(this.value)">
@@ -207,55 +207,73 @@
                 date_p.innerHTML = comment_list_data[idx*4+3];
                 info_td.append(writer_p, date_p);
 
+                var button_td = document.createElement("td");
+                var delete_button = document.createElement("input");
+                delete_button.type="button";
+                delete_button.className="Comment_delete";
+                delete_button.value = "삭제";
+                (function(m){
+                    delete_button.addEventListener("click", function(){
+                        delete_comment(comment_list_data[m*4]);
+                    },false );
+                })(idx);
+
+                var modify_button = document.createElement("input");
+                modify_button.type="button";
+                modify_button.className="Comment_modify";
+                modify_button.value = "수정";
+                (function(m){
+                    modify_button.addEventListener("click", function(){
+                        modify_comment_ready(m);
+                    },false );
+                })(idx);
+
+
+                var modify_confirm_button = document.createElement("input");
+                modify_confirm_button.type="button";
+                modify_confirm_button.className="Comment_modify_confirm";
+                modify_confirm_button.value = "수정 완료";
+                (function(m){
+                    modify_confirm_button.addEventListener("click", function(){
+                        modify_comment_confirm(comment_list_data[m*4], m);
+                    },false );
+                })(idx);
+
+                var modify_cancel_button = document.createElement("input");
+                modify_cancel_button.type="button";
+                modify_cancel_button.className="Comment_modify_cancel";
+                modify_cancel_button.value = "수정 취소";
+                (function(m){
+                    modify_cancel_button.addEventListener("click", function(){
+                        modify_comment_cancel(comment_list_data[m*4+1], m);
+                    },false );
+                })(idx);
+
                 if(nickname==comment_list_data[idx*4+2] || ismanager=="1"){
-                    var button_td = document.createElement("td");
-                    var delete_button = document.createElement("input");
-                    delete_button.type="button";
-                    delete_button.className="Comment_delete";
-                    delete_button.value = "삭제";
-                    (function(m){
-                        delete_button.addEventListener("click", function(){
-                            delete_comment(comment_list_data[m*4]);
-                        },false );
-                    })(idx);
-
-                    var modify_button = document.createElement("input");
-                    modify_button.type="button";
-                    modify_button.className="Comment_modify";
-                    modify_button.value = "수정";
-                    (function(m){
-                        modify_button.addEventListener("click", function(){
-                            modify_comment_ready(m);
-                        },false );
-                    })(idx);
-
-
-                    var modify_confirm_button = document.createElement("input");
-                    modify_confirm_button.type="button";
-                    modify_confirm_button.className="Comment_modify_confirm";
-                    modify_confirm_button.value = "수정 완료";
-                    (function(m){
-                        modify_confirm_button.addEventListener("click", function(){
-                            modify_comment_confirm(comment_list_data[m*4], m);
-                        },false );
-                    })(idx);
-
-                    var modify_cancel_button = document.createElement("input");
-                    modify_cancel_button.type="button";
-                    modify_cancel_button.className="Comment_modify_cancel";
-                    modify_cancel_button.value = "수정 취소";
-                    (function(m){
-                        modify_cancel_button.addEventListener("click", function(){
-                            modify_comment_cancel(comment_list_data[m*4+1], m);
-                        },false );
-                    })(idx);
-
-                    button_td.append(modify_button, delete_button, modify_confirm_button, modify_cancel_button);
-                    new_tr.append(content_td, info_td, button_td);
+                    button_td.style.visibility = "visible";
                 }else{
-                    new_tr.append(content_td, info_td);
+                    button_td.style.visibility = "hidden";
                 }
+
+                button_td.append(modify_button, delete_button, modify_confirm_button, modify_cancel_button);
+                new_tr.append(content_td, info_td, button_td);
+    
                 table.appendChild(new_tr);
+            }
+        }
+
+        function before_insert(){
+            var content = document.getElementById("Comments_Input_text").value;
+            var nickname = "<%=nickname%>";
+            if(nickname=="null" || nickname==""){
+                alert("로그인해주세요.");
+                event.preventDefault();
+                return;
+            }
+            if(content==""){
+                alert("댓글을 입력하세요.");
+                event.preventDefault();
+                return;
             }
         }
 

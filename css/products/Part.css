@@ -65,7 +65,9 @@ main{
     position: absolute;
     left: 300px;
     top: 320px;
+    width: 1800px;
     display: flex;
+    flex-wrap: wrap;
 }
 
 .product_name{
@@ -73,7 +75,7 @@ main{
     flex-direction: column;
     align-items: center;
     width: 300px;
-    height: fit-content;
+    height: 300px;
     border: 1px solid black;
     cursor: pointer;
 }
@@ -81,5 +83,7 @@ main{
 .product_name p{
     text-align: center;
     font-size: 15px;
+    height: 50px;
+    margin: 0;
 }
 

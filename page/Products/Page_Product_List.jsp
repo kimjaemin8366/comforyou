@@ -25,7 +25,6 @@
     
     Vector<String> list = new Vector<String>();
     int cnt = 0;
-    String s = "";
     Class.forName("com.mysql.jdbc.Driver");
     Connection connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/comforyou","james","8366");
 
@@ -46,7 +45,6 @@
     }else{
         String[] filter = option.split("_");
         String sql = "SELECT component.part_id, part_name, part_price, imagepath FROM component LEFT JOIN component_" + part.toLowerCase() + " ON component.part_id = component_" + part.toLowerCase() + ".part_id WHERE part_type='" +part+ "' AND " + filter[0] + "='" + filter[1] + "'";    
-        s = sql;
         Statement stmt = connect.createStatement();
         ResultSet result = stmt.executeQuery(sql);
 
@@ -73,7 +71,7 @@
 <body>
     <header>
         <div id="homepage">
-            <input class="header_option_button" type="button" value="COM with me" onclick="location.href='../home.jsp'">
+            <input class="header_option_button" type="button" value="COM for you" onclick="location.href='../home.jsp'">
         </div>
         <div id="header_option">
             <input class="header_option_button" type="button" value="Login"onclick="location.href='../login/Page_Login.jsp'">
@@ -87,7 +85,7 @@
         <input class="nav_button" type="button" value="Mainboard"  onclick="move_site(this.value)">
         <input class="nav_button" type="button" value="GPU"  onclick="move_site(this.value)">
         <input class="nav_button" type="button" value="RAM"  onclick="move_site(this.value)">
-        <input class="nav_button" type="button" value="SSD&HDD"  onclick="move_site(this.value)">
+        <input class="nav_button" type="button" value="Disk"  onclick="move_site(this.value)">
         <input class="nav_button" type="button" value="Cooler"  onclick="move_site(this.value)">
         <input class="nav_button" type="button" value="Power"  onclick="move_site(this.value)">
         <input class="nav_button" type="button" value="Tower"  onclick="move_site(this.value)">
@@ -99,14 +97,12 @@
         <hr>
     </nav>
     <main>
-        <div></div>
     </main>
 
     <script>
 
         
         window.onload = function(){
-            console.log("<%=s%>")
             show_product_list_nav();
             if_logged();
             product_list(); 
@@ -178,7 +174,7 @@
 
         function cpu_filter(){
             var manufacturer = ["manufacturer", "Intel", "AMD"];
-            var core = ["core", "16 and 8", "8 and 8", "8 and 4"];
+            var core = ["core", "16 and 8", "8 and 8", "8 and 4", "8"];
             var ddr = ["ddr", "DDR5", "DDR4", "DDR3"];
             var filters = [manufacturer, core, ddr];
 
@@ -189,7 +185,7 @@
                 menu.append(make_list(filters[idx], site), hr);
             }
         }
-
+    
         function mainboard_filter(){
 
             var manufacturer = ["manufacturer","ASUS", "MSI", "GIGABYTE"];
@@ -233,7 +229,7 @@
         }
 
         function disk_filter(){
-            var disk = ["disk", "SSD", "HDD"]
+            var disk = ["type", "SSD", "HDD"]
             var manufacturer = ["manufacturer", "Samsung", "SK Hynix", "Micron", "Seagate", "TOSHIBA"];
             var size = ["size","4TB", "2TB", "1TB", "512GB"];
             var interface = ["interface", "SATA3", "PCIe4.0", "PCIe3.0"];
@@ -250,11 +246,11 @@
 
         function cooler_filter(){
             var manufacturer = ["manufacturer", "PCCOOLER", "NZXT", "DEEPCOOL"];
-            var socket = ["socket", "1700", "1200", "AM4", "sWRX8"];
-            var filters = [manufacturer, socket];
+            var method = ["method", "air", "water"];
+            var filters = [manufacturer, method];
 
             var menu = document.getElementById("nav_menu");
-            var site = "./Page_Product_List.jsp?part=RAM&";
+            var site = "./Page_Product_List.jsp?part=Cooler&";
             for(idx=0; idx<filters.length; idx++){
                 var hr = document.createElement("hr");
                 menu.append(make_list(filters[idx], site), hr);
@@ -264,7 +260,7 @@
         function power_filter(){
             var manufacturer = ["manufacturer", "Micronics", "Seasonic", "PSP"];
             var type = ["type", "ATX", "M-ATX(SFX)", "TFX", "Server"]
-            var power = ["power", "700W~", "600~699W", "500~599W", "499W"];
+            var power = ["power", "1000", "800","750","700", "650", "600", "550", "500"];
             var filters = [manufacturer, type, power];
 
             var menu = document.getElementById("nav_menu");

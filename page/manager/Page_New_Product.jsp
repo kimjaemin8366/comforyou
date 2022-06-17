@@ -36,7 +36,7 @@
 <body>
     <header>
         <div id="homepage">
-            <input class="header_option_button" type="button" value="COM with me" onclick="location.href='../home.jsp'">
+            <input class="header_option_button" type="button" value="COM for you" onclick="location.href='../home.jsp'">
         </div>
         <div id="header_option">
             <input class="header_option_button" type="button" value="Login"onclick="location.href='../login/Page_Login.jsp'">
@@ -50,7 +50,7 @@
         <input class="nav_button" type="button" value="Mainboard"  onclick="move_site(this.value)">
         <input class="nav_button" type="button" value="GPU"  onclick="move_site(this.value)">
         <input class="nav_button" type="button" value="RAM"  onclick="move_site(this.value)">
-        <input class="nav_button" type="button" value="SSD&HDD"  onclick="move_site(this.value)">
+        <input class="nav_button" type="button" value="Disk"  onclick="move_site(this.value)">
         <input class="nav_button" type="button" value="Cooler"  onclick="move_site(this.value)">
         <input class="nav_button" type="button" value="Power"  onclick="move_site(this.value)">
         <input class="nav_button" type="button" value="Tower"  onclick="move_site(this.value)">
@@ -58,7 +58,7 @@
         <input class="nav_button" type="button" value="Manager" onclick="move_manager_page()">
     </nav>
     <main>
-        <form action="Insert_New_Product.jsp" enctype="multipart/form-data" method="POST">
+        <form action="Insert_New_Product.jsp" enctype="multipart/form-data" method="POST" onsubmit="before_insert()">
             <div>
                 IMG:
                 <input name="img" id="img_input" class="inputs" type="file">
@@ -114,14 +114,6 @@
                         <input class="content" name="date" type="date">
                     </td>
                 </tr>
-                <!-- <tr>
-                    <th class="part_property">
-                        <input class="property" name="property_1" type="text" placeholder="속성">
-                    </th>
-                    <td class="property_content">
-                        <input class="content" name="content_1" type="text">
-                    </td>
-                </tr> -->
             </table>
             <div id="submit_div">
                 <input type="submit" id="submit_button" value="제출">
@@ -147,7 +139,7 @@
             var new_prop = document.createElement("input");
             new_prop.type= "text";
             new_prop.className = "property";
-            new_prop.name = "property_"+cnt;
+            new_prop.name = "property_"+cnt.value;
             new_prop.setAttribute("placeholder", "속성");
 
             new_th.appendChild(new_prop);
@@ -156,16 +148,16 @@
             new_td.className= "property_content";
             new_content = document.createElement("input");
             new_content.className="content";
-            new_content.name = "content_"+cnt;
+            new_content.name = "content_"+cnt.value;
             new_content.type = "text";
             new_td.appendChild(new_content);
             new_tr.append(new_th, new_td);
             table.appendChild(new_tr)
 
-            cnt.value = parseInt(cnt.value) + 1;
+            cnt.value= parseInt(cnt.value) + 1;
         }
         function delete_tr(){
-            if(cnt==1){
+            if(parseInt(cnt.value)==1){
                 return;
             }
             var table = document.getElementById("table");
@@ -182,12 +174,12 @@
             var part = "<%=part%>";
             document.getElementById("type").value = part;
 
-            var cpu_props = ["core", "socket"];
+            var cpu_props = ["core", "ddr"];
             var main_props = ["usefor", "socket"];
             var gpu_props = ["chipset"];
             var ram_props = ["size", "ddr"];
             var disk_props = ["type", "size", "interface", "rpm"];
-            var cool_props = ["socket"];
+            var cool_props = ["method"];
             var power_props = ["type", "power"];
             var tower_props = ["type", "size"];
             if(part=="CPU"){
@@ -235,6 +227,42 @@
                 new_tr.append(new_th, new_td);
                 table.appendChild(new_tr)
             }
+        }
+
+        function before_insert(){
+            for(var idx=0; idx<3; idx++){
+                if(document.getElementsByClassName("inputs")[idx].value == ""){
+                    alert("내용을 입력하세요.");
+                    event.preventDefault();
+                    return;
+                }
+            }
+            if(isNaN(document.getElementsByName("price")[0].value)){
+                alert("가격을 숫자로 입력해주세요.");
+                event.preventDefault();
+                return;
+            }
+
+            var cnt = parseInt(document.getElementsByName("cnt")[0].value);
+
+            for(var idx=0; idx<cnt-1; idx++){
+                if(document.getElementsByName("property_"+(idx+1))[idx].value == ""){
+                    alert("속성명을 모두 입력해주세요.");
+                    event.preventDefault();
+                    return;
+                }
+            }
+
+            for(var idx=0; idx<3+(cnt-1); idx++){
+                if(document.getElementsByClassName("content")[idx].value == ""){
+                    alert("속성을 모두 입력해주세요.");
+                    event.preventDefault();
+                    return;
+                }
+            }
+
+
+            
         }
 
         function move_manager_page(){

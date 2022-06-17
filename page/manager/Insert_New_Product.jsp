@@ -27,18 +27,18 @@
     String part = mr.getParameter("part");
     String manufacturer = mr.getParameter("Manufacturer");
     String date = mr.getParameter("date");
-    String imagepath = "../../image/Product" + img;
+    String imagepath = "../../image/Product/" + img;
 
     int cnt = Integer.parseInt(mr.getParameter("cnt"));
     String etc = "[";
-    for(int i=1; i<=cnt; i++){
-        String property = mr.getParameter("property_"+cnt);
-        String content = mr.getParameter("content_"+cnt);
+    for(int i=1; i<cnt; i++){
+        String property = mr.getParameter("property_"+i);
+        String content = mr.getParameter("content_"+i);
 
         etc += property;
         etc += ",";
         etc += content;
-        if(i!=cnt){
+        if(i!=(cnt-1)){
             etc += ",";
         }
     }
@@ -70,16 +70,18 @@
 
     Boolean success = false;
 
+    String s=  "";
+
     if(part.equals("CPU")){
         String core = mr.getParameter("core_value");
-        String socket = mr.getParameter("socket_value");
-        String sql3 = "INSERT INTO component_cpu(part_id, release_date, manufacturer, core, socket, etc_option) VALUES (?,?,?,?,?,?)";
+        String ddr = mr.getParameter("ddr_value");
+        String sql3 = "INSERT INTO component_cpu(part_id, release_date, manufacturer, core, ddr, etc_option) VALUES (?,?,?,?,?,?)";
         PreparedStatement query3 = connect.prepareStatement(sql3);
         query3.setInt(1, part_id);
         query3.setString(2, date);
         query3.setString(3, manufacturer);
         query3.setString(4, core);
-        query3.setString(5, socket);
+        query3.setString(5, ddr);
         query3.setString(6, etc);
         query3.executeUpdate();
         
@@ -144,13 +146,13 @@
         success= true;
 
     }else if(part.equals("Cooler")){
-        String socket = mr.getParameter("socket_value");
-        String sql3 = "INSERT INTO component_cooler(part_id, release_date, manufacturer, socket, etc_option) VALUES (?,?,?,?,?)";
+        String method = mr.getParameter("method_value");
+        String sql3 = "INSERT INTO component_cooler(part_id, release_date, manufacturer, method, etc_option) VALUES (?,?,?,?,?)";
         PreparedStatement query3 = connect.prepareStatement(sql3);
         query3.setInt(1, part_id);
         query3.setString(2, date);
         query3.setString(3, manufacturer);
-        query3.setString(4, socket);
+        query3.setString(4, method);
         query3.setString(5, etc);
         query3.executeUpdate();
         success= true;
@@ -172,7 +174,8 @@
     }else if(part.equals("Tower")){
         String type = mr.getParameter("type_value");
         String size = mr.getParameter("size_value");
-        String sql3 = "INSERT INTO component_ram(part_id, release_date, manufacturer, type, size, etc_option) VALUES (?,?,?,?,?,?)";
+        String sql3 = "INSERT INTO component_tower(part_id, release_date, manufacturer, type, size, etc_option) VALUES (?,?,?,?,?,?)";
+        s = sql3;
         PreparedStatement query3 = connect.prepareStatement(sql3);
         query3.setInt(1, part_id);
         query3.setString(2, date);
@@ -191,7 +194,7 @@
     <script>
        window.onload= function(){
            if(<%=success%>){
-                alert("success");
+                alert("제품 등록 완료");
                 location.href= "./Page_Manager.jsp";
            }
        }

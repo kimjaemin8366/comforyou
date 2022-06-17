@@ -1,11 +1,11 @@
 /* 메인 */
 main{
-    left: 300px;
-    top: 300px;
+    margin-top: 300px;
     width: 1440px;
     height : 500px;
+    margin-left: auto;
+    margin-right: auto;
     text-align: center;
-    position: absolute
 }
 
 #gohome_button{

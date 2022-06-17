@@ -12,6 +12,8 @@
     String nickname = (String) session.getAttribute("nickname");
     String comment = request.getParameter("comment");
     int post_id = Integer.parseInt(request.getParameter("post_id"));
+
+    comment=comment.replace("\r\n","<br>");
     
     Boolean logged = false;
     if(logged_id != null){
